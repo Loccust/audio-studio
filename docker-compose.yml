@@ -1,0 +1,19 @@
+
+version: '2.1'
+services: 
+  live-reload:
+    image: audio-studio
+    build: .
+    environment:
+      PORT: 3000
+    command: 
+      - npm
+      - run
+      - live-reload
+    volumes:
+      - .:/audio-studio
+      - node_modules:/audio-studio/node_modules
+    ports:
+      - 3000:3000
+volumes:
+  node_modules: {}
