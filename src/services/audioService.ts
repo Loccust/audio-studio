@@ -10,7 +10,7 @@ export default class AudioService {
     try {
       const args = ["--i", "-B", song];
       const { stderr, stdout } = this.executeSoxCommand(args);
-      
+
       await Promise.all([once(stderr, "readable"), once(stdout, "readable")]);
       const [success, error] = [stdout, stderr].map((stream) => stream.read());
       if (error) return await Promise.reject(error);
@@ -24,17 +24,30 @@ export default class AudioService {
   async mixAudios(songsPath: string[]) {
     try {
       const songsArgs = ["-t", "mp3", "-v", "0.99"];
-      const songs = songsPath.map((song) => [song, ...songsArgs]);
       const output = "src/audio/output/out.mp3";
       const mixArgs = ["-t", "mp3"];
-
-      const args = [...songsArgs, "-m", songs, ...mixArgs, output];
-      const { stderr, stdout } = this.executeSoxCommand(args);
       
+      const offsetArgs = ["pad", "5@0"];
+      let songs: string[] = [];
+      songsPath.forEach((song, i) => {
+        if (i > 0)
+          songsArgs.forEach((arg) => {
+            songs.push(arg);
+          });
+        songs.push(song);
+        // offsetArgs.forEach((arg) => {
+        //   songs.push(arg);
+        // });
+      });
+      
+      const args = [...songsArgs, "-m", ...songs, ...mixArgs, output];
+
+      const { stderr, stdout } = this.executeSoxCommand(args);
+
       const [success, error] = [stdout, stderr].map((stream) => stream.read());
       if (error) return await Promise.reject(error);
-      return success.toString();
-
+      console.log(success, error);
+      return success?.toString();
     } catch (error) {
       console.error(`deu ruim no mix: ${error}`);
       return false;

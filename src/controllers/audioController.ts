@@ -17,8 +17,9 @@ export default class AudioController {
 
   public async mixAudio(req: Request, res: Response) {
     const song = `${this.audioPath}/songs/conversation.mp3`;
-    const fx = `${this.audioPath}/fx/fart-128kbps.mp3`;
-    const songs = [song, fx];
+    const fart = `${this.audioPath}/fx/fart-128kbps.mp3`;
+    const boo = `${this.audioPath}/fx/boo-128kbps.mp3`;
+    const songs = [song, fart, boo];
     const mix = await this.audioService.mixAudios(songs);
     res.json({ mix });
   }
