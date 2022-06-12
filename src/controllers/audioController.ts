@@ -9,10 +9,15 @@ export default class AudioController {
   }
   
   public async getBitRate(req: Request, res: Response) {
-    console.log(this)
     const fx = `${this.audioPath}/fx/fart-128kbps.mp3`;
     const bitRate = await this.audioService.getAudioBitRate(fx);
     res.json({ bitRate });
+  }
+
+  public async loopAudio(req: Request, res: Response) {
+    const fx = `${this.audioPath}/fx/fart-128kbps.mp3`;
+    const loop = await this.audioService.loopAudio(fx, 3);
+    res.json({ loop });
   }
 
   public async mixAudio(req: Request, res: Response) {
