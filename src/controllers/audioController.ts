@@ -21,9 +21,9 @@ export default class AudioController {
     const boo = `${this.audioPath}/fx/boo-128kbps.mp3`;
 
     const tracks: ITrack[] = [
-      { path: song, beginAt: 0, repeat: 0 },
-      { path: fart, beginAt: 10, repeat: 2 },
-      { path: boo, beginAt: 20, repeat: 0 },
+      { path: song, beginAt: 0, repeat: 0, volume: 0.99 },
+      { path: fart, beginAt: 10, repeat: 2, volume: 0.50 },
+      { path: boo, beginAt: 20, repeat: 0, volume: 0.1 },
     ];
 
     const mix = await this.audioService.mixAudios(tracks);

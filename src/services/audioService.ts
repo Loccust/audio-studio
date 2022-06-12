@@ -90,16 +90,18 @@ export default class AudioService {
 
   async mixAudios(tracks: ITrack[]) {
     try {
-      const trackArgs = ["-t", "mp3", "-v", "0.99"];
-      const output = `${this.baseAudioDir}/output/out.mp3`;
-      const mixArgs = ["-t", "mp3"];
-
       //[x] dto class/interface to pass all arguments
-      //[ ] function to get/convert the bitrate of the songs - save/delete
       //[x] function to loop the tracks/ if have - save/delete
       //[x] function to run pad (the shorter track to the length of the longer) - save/delete
-      //[ ] function to get the filename of the mixed track
       //[x] mix the tracks - save
+
+      //[ ] receive files from aws s3
+      //[ ] save files to local disk
+      //[ ] validate dtos
+
+      //[ ] validate bitrate
+      //[ ] validate duration
+      //[ ] error handling/logging - return messages
 
       //loop tracks to mix
       let _tracks = [...tracks];
@@ -124,28 +126,38 @@ export default class AudioService {
       }
 
       //mix the tracks
-      let tracksPathArgs: string[] = [_tracks[0].path];
+      const trackArgs = ["-t", "mp3", "-v"];
+      const output = `${this.baseAudioDir}/output/out.mp3`;
+      const mixArgs = ["-t", "mp3"];
+
+      let tracksPathArgs: Array<string | number> = [_tracks[0].path];
       _tracks.slice(1).forEach((track) => {
         trackArgs.forEach((trackArg) => {
           tracksPathArgs.push(trackArg);
         });
+        tracksPathArgs.push(track.volume);
         tracksPathArgs.push(track.path);
       });
 
-      const args = [...trackArgs, "-m", ...tracksPathArgs, ...mixArgs, output];
-      console.log("mix args", args);
+      const args = [
+        ...trackArgs,
+        _tracks[0].volume,
+        "-m",
+        ...tracksPathArgs,
+        ...mixArgs,
+        output,
+      ];
       const child = this.executeSoxCommand(args);
 
-      //delete the temp track files
-      let tempTrackPaths = [...loopedTrackPaths, ...padTrackPaths];
-      //remove duplicates
-      tempTrackPaths.filter((path, i) => tempTrackPaths.indexOf(path) === i);
-      const deleteTrackPromises = tempTrackPaths.map((trackPath) =>
-        this.deleteFile(trackPath)
-      );
-      await Promise.allSettled(deleteTrackPromises);
-
-      child.on("close", (code) => {
+      child.on("close", async (code) => {
+        // //delete the temp track files
+        let tempTrackPaths = [...loopedTrackPaths, ...padTrackPaths];
+        //remove duplicates
+        tempTrackPaths.filter((path, i) => tempTrackPaths.indexOf(path) === i);
+        const deleteTrackPromises = tempTrackPaths.map((trackPath) =>
+          this.deleteFile(trackPath)
+        );
+        await Promise.allSettled(deleteTrackPromises);
         console.log(`mix process exited with code ${code}`);
         if (code === 0) {
           //return success
