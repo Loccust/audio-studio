@@ -1,9 +1,10 @@
 import AudioService from "../services/audioService";
 import { Request, Response } from "express";
+import ITrack from "../common/dto/ITrack";
 
 export default class AudioController {
  audioService: AudioService;
- audioPath: string = "src/audio";
+ audioPath: string = "audio";
   constructor(audioService: AudioService) {
     this.audioService = audioService;
   }
@@ -14,18 +15,18 @@ export default class AudioController {
     res.json({ bitRate });
   }
 
-  public async loopAudio(req: Request, res: Response) {
-    const fx = `${this.audioPath}/fx/fart-128kbps.mp3`;
-    const loop = await this.audioService.loopAudio(fx, 3);
-    res.json({ loop });
-  }
-
   public async mixAudio(req: Request, res: Response) {
     const song = `${this.audioPath}/songs/conversation.mp3`;
     const fart = `${this.audioPath}/fx/fart-128kbps.mp3`;
     const boo = `${this.audioPath}/fx/boo-128kbps.mp3`;
-    const songs = [song, fart, boo];
-    const mix = await this.audioService.mixAudios(songs);
+
+    const tracks: ITrack[] = [
+      { path: song, beginAt: 0, repeat: 0 },
+      { path: fart, beginAt: 10, repeat: 2 },
+      { path: boo, beginAt: 20, repeat: 0 },
+    ];
+
+    const mix = await this.audioService.mixAudios(tracks);
     res.json({ mix });
   }
 }

@@ -9,6 +9,5 @@ const audioController = new AudioController(audioService);
 
 router.get("/bit-rate", (req, res) => audioController.getBitRate(req, res));
 router.get("/mix", (req, res) => audioController.mixAudio(req, res));
-router.get("/loop", (req, res) => audioController.loopAudio(req, res));
 
 export default router;
