@@ -3,7 +3,7 @@ import FileHelper from "../common/FileHelper";
 import SoxChannel from "../common/Sox/SoxChannel";
 import IMixResponse from "../contracts/sox/IMixResponse";
 
-export default class ChannelService {
+export default class TrackService {
   async mixChannels(channels: IChannel[]) {
     try {
       const mixResponse: IMixResponse = 
@@ -12,11 +12,12 @@ export default class ChannelService {
           .then(() => SoxChannel.padMultiChannels())
           .then(() => SoxChannel.mixChannels());
 
+      //save pad tracks
       await Promise.allSettled(
         [
           ...new Set([
             ...mixResponse.loopedChannelPaths,
-            ...mixResponse.loopedChannelPaths,
+            ...mixResponse.padChannelPaths,
           ]),
         ].map((channelPath) => FileHelper.deleteFile(channelPath))
       );

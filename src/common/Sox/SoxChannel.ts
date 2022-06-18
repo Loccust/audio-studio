@@ -17,7 +17,7 @@ export default class SoxChannel {
     return new Promise(async (resolve, reject) => {
       if (channel.repeat === 0) return resolve(channel);
       const filename = channel.path.split("/").pop()?.replace(".mp3", "");
-      const output = `${audioConfig.baseAudioDir}/output/temp/${filename}-pad.mp3`;
+      const output = `${audioConfig.baseAudioDir}/output/temp/channels/${filename}-pad.mp3`;
       SoxIntegration.pad(channel.path, channel.beginAt, output).then(
         (path) => {
           resolve({ ...channel, path });

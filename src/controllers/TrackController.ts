@@ -1,17 +1,17 @@
 import { IChannel } from './../contracts/entities/ITrack';
 import { ITrack } from "../contracts/entities/ITrack";
 import { Request, Response } from "express";
-import AudioService from "../services/ChannelService";
+import TrackService from "../services/TrackService";
 import  audioConfig  from "../common/audio.config";
 
 export default class TrackController {
-  audioService: AudioService;
+  trackService: TrackService;
 
-  constructor(audioService: AudioService) {
-    this.audioService = audioService;
+  constructor(trackService: TrackService) {
+    this.trackService = trackService;
   }
 
-  public async mixTracks(req: Request, res: Response) {
+  public async createTrack(req: Request, res: Response) {
     const song = `${audioConfig.baseAudioDir}/songs/conversation.mp3`;
     const fart = `${audioConfig.baseAudioDir}/fx/fart-128kbps.mp3`;
     const boo = `${audioConfig.baseAudioDir}/fx/boo-128kbps.mp3`;
@@ -22,7 +22,7 @@ export default class TrackController {
       { path: boo, beginAt: 20, repeat: 0, volume: 0.1 },
     ];
 
-    const mix = await this.audioService.mixChannels(channels);
+    const mix = await this.trackService.mixChannels(channels);
     res.json({ mix });
   }
 }
