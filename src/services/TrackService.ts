@@ -1,7 +1,7 @@
 import { IChannel } from "../contracts/entities/ITrack";
-import FileHelper from "../common/FileHelper";
-import SoxChannel from "../common/Sox/SoxChannel";
 import IMixResponse from "../contracts/sox/IMixResponse";
+import SoxChannel from "../common/Sox/SoxChannel";
+import FileHelper from "../common/FileHelper";
 
 export default class TrackService {
   async mixChannels(channels: IChannel[]) {
