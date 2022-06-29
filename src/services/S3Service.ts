@@ -1,22 +1,14 @@
 import { S3 } from "aws-sdk";
 import "dotenv/config";
 
-interface IUploadFileProps {
-  files:
-    | {
-        [fieldname: string]: Express.Multer.File[];
-      }
-    | Express.Multer.File[]
-    | undefined;
-}
-
 const bucketName = process.env.S3_BUCKET_NAME || "";
+
 export default class S3Service {
   private s3 = new S3();
-
-  uploadFile = async ({ files }: IUploadFileProps) => {
+  uploadFile = async (files: Express.Request["files"]) => {
     if (!files || !Array.isArray(files) || files.length === 0)
       return Promise.reject("Files are required");
+
     const params = files?.map((file, i) => {
       return {
         Bucket: bucketName,
@@ -38,7 +30,6 @@ export default class S3Service {
   };
 
   getFileUrl = async (filePath: string) => {
-    console.log("bucketName", bucketName);
     const params = {
       Bucket: bucketName,
       Key: `uploads/${filePath}`,

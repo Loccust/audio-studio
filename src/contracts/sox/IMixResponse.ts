@@ -1,5 +1,5 @@
 export default interface IMixResponse {
-  loopedChannelPaths: string[];
-  padChannelPaths: string[];
-  mixedChannelsPath: string;
+  loopedTrackPaths: string[];
+  padTrackPaths: string[];
+  mixedTracksPath: string;
 }

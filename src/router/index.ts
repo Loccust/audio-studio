@@ -1,7 +1,7 @@
+import SoundRouter from "./SoundRouter";
 import { Router } from "express";
-import TrackRouter from "./TrackRouter";
 
 const router = Router();
-router.use("/track", TrackRouter);
+router.use("/sound", SoundRouter);
 
 export default router;
