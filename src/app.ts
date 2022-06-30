@@ -1,5 +1,4 @@
 import express, { Application } from "express";
-import dbconfig from "./data/db.config";
 import mongoose from "mongoose";
 import router from "./router";
 import dotenv from "dotenv";
@@ -7,7 +6,8 @@ import dotenv from "dotenv";
 const app: Application = express();
 
 dotenv.config();
-// mongoose.connect(dbconfig.uri);
+const dbEndpoint = process.env.DB_ENDPOINT || "";
+mongoose.connect(dbEndpoint);
 app.use(express.json());
 
 app.use(router);

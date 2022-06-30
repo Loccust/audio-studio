@@ -4,22 +4,19 @@ import { ISound } from "../contracts/entities/ISound";
 import { Request, Response } from "express";
 import SoundService from "../services/SoundService";
 import audioConfig from "../common/audio.config";
-import S3Service from "../services/S3Service";
+import S3Service from "../common/S3Provider";
 import SoundModel from "../data/models/SoundModel";
 import SoundRepository from "../data/repositories/SoundRepository";
 
 export default class SoundController {
   soundService: SoundService;
-  s3Service: S3Service;
 
-  constructor(soundService: SoundService, S3Service: S3Service) {
+  constructor(soundService: SoundService) {
     this.soundService = soundService;
-    this.s3Service = S3Service;
   }
 
   public async createSound(req: Request, res: Response) {
     const { duration, imageUri, tracks, title }:ISoundDto = JSON.parse(req.body.data) //req.body;
-    console.log({ duration, imageUri, tracks, title })
     const multerFiles = req.files;
 
     const files = Array.isArray(multerFiles)
@@ -58,17 +55,4 @@ export default class SoundController {
 
     res.json(soundRes);
   }
-
-  // public async uploadS3(req: Request, res: Response) {
-  //   const files = req.files;
-  //   const upload = await this.s3Service.uploadFile({ files });
-  //   res.json({ upload });
-  // }
-
-  // public async getFromS3(req: Request, res: Response) {
-  //   const { filename } = req.params;
-  //   console.log(filename);
-  //   const file = await this.s3Service.getFileUrl(filename);
-  //   res.json({ file });
-  // }
 }
