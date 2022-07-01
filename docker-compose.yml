@@ -2,6 +2,8 @@
 version: '2.1'
 services: 
   live-reload:
+    container_name: app
+    restart: on-failure
     image: audio-studio
     build: .
     environment:
@@ -15,5 +17,20 @@ services:
       - node_modules:/audio-studio/node_modules
     ports:
       - 3333:3333
+    links:
+      - db
+
+  db:
+    container_name: mongodb
+    image: mongo:latest
+    ports:
+      - 27017:27017
+    volumes:
+      - ~/apps/mongo:/data/db
+    environment:
+      - MONGODB_DATABASE=trackzy
+    #   - MONGO_INITDB_ROOT_USERNAME=root
+    #   - MONGO_INITDB_ROOT_PASSWORD=S3cret
+
 volumes:
   node_modules: {}

@@ -69,6 +69,57 @@ export default class SoxIntegration {
     });
   }
 
+  static async trim(path: string, splitAt: number, output: string) {
+    return new Promise<string>((resolve, reject) => {
+      const filename = path.split("/").pop()?.replace(".mp3", "");
+      const args = [path, output, "trim", 0, splitAt];
+      const child = this.executeSoxCommand(args);
+
+      child.on("close", (code) => {
+        if (code === 0) resolve(output);
+        else {
+          reject(`Unable to exec sox trim: ${filename}`);
+          console.error(`trim process exited with code ${code}`);
+        }
+      });
+    });
+  }
+
+  static async concat(path1: string, path2: string, output: string) {
+    return new Promise<string>((resolve, reject) => {
+      const args = [path1, path2, output];
+      const child = this.executeSoxCommand(args);
+
+      child.on("close", (code) => {
+        if (code === 0) resolve(output);
+        else {
+          reject("Unable to exec sox concat");
+          console.error(`concat process exited with code ${code}`);
+        }
+      });
+    });
+  }
+
+  static async trimConcat(
+    path2ToConcat: string,
+    splitAt: number,
+    path1: string,
+    output: string
+  ) {
+    return new Promise<string>((resolve, reject) => {
+      const args = [path1, path2ToConcat, "trim", 0, splitAt, output];
+      const child = this.executeSoxCommand(args);
+
+      child.on("close", (code) => {
+        if (code === 0) resolve(output);
+        else {
+          reject("Unable to exec sox concat");
+          console.error(`concat process exited with code ${code}`);
+        }
+      });
+    });
+  }
+
   static async mix(args: Array<string | number>, output: string) {
     return new Promise<string>((resolve, reject) => {
       const child = this.executeSoxCommand(args);

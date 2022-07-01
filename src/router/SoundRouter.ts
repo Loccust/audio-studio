@@ -12,7 +12,7 @@ const soundService = new SoundService(soundRepository);
 const soundController = new SoundController(soundService);
 
 const upload = multer({fileFilter}).array("tracks");
-
 soundRouter.post("/", upload, (req, res) => soundController.createSound(req, res));
+soundRouter.get("/", (req, res) => soundController.getSounds(req, res));
 
 export default soundRouter;

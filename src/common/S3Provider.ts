@@ -5,25 +5,19 @@ const bucketName = process.env.S3_BUCKET_NAME || "";
 const s3 = new S3();
 
 export default class S3Provider {
-  static uploadFile = async (files: Express.Request["files"]) => {
-    if (!files || !Array.isArray(files) || files.length === 0)
-      return Promise.reject("Files are required");
-    const params = files?.map((file, i) => {
-      return {
-        Bucket: bucketName,
-        Key: `uploads/${i}-${file.originalname}`,
-        Body: file.buffer,
-      };
-    });
-    return await Promise.all(
-      params.map((param) => s3.upload(param).promise())
-    );
+  static uploadFile = async (buffer: Buffer, filename: string) => {
+    const params = {
+      Bucket: bucketName,
+      Key: filename,
+      Body: buffer,
+    };
+    return await s3.upload(params).promise();
   };
 
   static deleteFile = async (filePath: string) => {
     const params = {
       Bucket: bucketName,
-      Key: `uploads/${filePath}`,
+      Key: filePath,
     };
     return await s3.deleteObject(params).promise();
   };
@@ -31,7 +25,7 @@ export default class S3Provider {
   static getFileUrl = async (filePath: string) => {
     const params = {
       Bucket: bucketName,
-      Key: `uploads/${filePath}`,
+      Key: filePath,
     };
     return await s3.getObject(params).promise();
   };
