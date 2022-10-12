@@ -1,3 +1,5 @@
+import { ITrack } from "./ITrack";
+
 export interface ISound {
     id?: string;
     title: string;
@@ -9,15 +11,4 @@ export interface ISound {
     creationDate: Date,
     lastAltDate: Date,
     userId: number,
-}
-
-export interface ITrack {
-  id?: string,
-  duration: number,
-  description: string,
-  loop: boolean,
-  beginAt: number,
-  volume: number,
-  audioUri?: string,
-  path: string
 }

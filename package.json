@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node src/server.ts",
     "live-reload": "ts-node-dev --respawn --transpile-only src/server.ts",
-    "live-reload:docker": "docker-compose up -d --build live-reload mongodb"
+    "live-reload:docker": "docker-compose up -d --build live-reload db"
   },
   "keywords": [],
   "author": "",

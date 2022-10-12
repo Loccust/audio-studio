@@ -1,12 +1,13 @@
 import SoundRepository from "../data/repositories/SoundRepository";
 import ISoundService from "../contracts/services/ISoundService";
-import { ISound, ITrack } from "../contracts/entities/ISound";
+import { ISound } from "../contracts/entities/ISound";
 import { ISoundDto } from "./../contracts/dtos/ISoundDto";
 import IMixResponse from "../contracts/sox/IMixResponse";
 import audioConfig from "../common/audio.config";
 import SoxTrack from "../common/Sox/SoxTrack";
 import FileHelper from "../common/FileHelper";
 import S3Provider from "../common/S3Provider";
+import { ITrack } from "../contracts/entities/ITrack";
 
 export default class SoundService implements ISoundService {
   private readonly soundRepository: SoundRepository;
@@ -15,8 +16,24 @@ export default class SoundService implements ISoundService {
     this.soundRepository = soundRepository;
   }
 
-  getSounds(): Promise<ISound[]> {
-    return this.soundRepository.getList();
+  async getSounds(): Promise<ISoundDto[]> {
+    const modelList = await this.soundRepository.getList();
+    const soundList: ISoundDto[] = modelList.map((model) => ({
+      id: model.id,
+      title: model.title,
+      duration: model.duration,
+      imageUri: model.imageUri,
+      tracks: model.tracks.map((track) => ({
+        id: track.id,
+        description: track.description,
+        beginAt: track.beginAt,
+        duration: track.duration,
+        loop: track.loop,
+        volume: track.volume,
+        fileName: track.path.split("/").pop() as string,
+      })),
+    }));
+    return soundList;
   }
 
   async createSound(soundDto: ISoundDto, files: Express.Multer.File[]) {

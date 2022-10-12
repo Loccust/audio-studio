@@ -1,5 +1,5 @@
 import IMixResponse from "../../contracts/sox/IMixResponse";
-import { ITrack } from "../../contracts/entities/ISound";
+import { ITrack } from "../../contracts/entities/ITrack";
 import SoxIntegration from "./SoxIntegration";
 import audioConfig from "../audio.config";
 

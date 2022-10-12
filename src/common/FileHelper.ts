@@ -26,7 +26,7 @@ export default class FileHelper {
     try {
       return fs.readFileSync(filepath);
     } catch (err) {
-      console.error(`erro ao deletar arquivo: ${err}`);
+      console.error(`erro ao obter informações do arquivo: ${err}`);
     }
   }
 
